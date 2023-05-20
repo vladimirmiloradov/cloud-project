@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex h-100 bg-light">
+    <form class="container-fluid m-auto bg-white p-5 border round" method="POST" style="max-width: 30rem;">
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Фамилия">
+            <label for="last_name">Фамилия</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="first_name" name="first_name" placeholder="Имя">
+            <label for="first_name">Имя</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Отчество">
+            <label for="middle_name">Отчество</label>
+        </div>
+
+        <div class="form-floating mb-3">
+            <input autocomplete="off" type="text" class="form-control" name="login" id="login" placeholder="login"
+                value="{{ request.form.login }}" required>
+            <label for="login">Логин</label>
+        </div>
+    
+        <div class="form-floating mb-3">
+            <input type="password" class="form-control" id="password_hash" name="password_hash" placeholder="Password">
+            <label for="password_hash">Пароль</label>
+        </div>
+    
+        <button type="submit" class="btn btn-dark w-100">Зарегистрироваться</button>
+    </form>
+</div>
+{% endblock %}

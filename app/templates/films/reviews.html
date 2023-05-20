@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% from 'form.html' import render_five_last_reviews %}
+{% from 'pagination.html' import render_pagination %}
+
+{% block content %}
+    <h1 class="text-center">Отзывы о фильме "{{ films.name }}"</h1>
+    <div class="container d-flex w-75 justify-content-center flex-column">
+        <form>
+            
+            <div class="container mt-3 border">
+                <div class="row m-3">
+                    <div class="col-md-6">
+                        <h6>Сортировать</h6>
+                        <select name="param" id="param" class="form-select">
+                            <option {% if param == 'new' %}selected{% endif %} value="new">Сначала новые</option>
+                            <option {% if param == 'old' %}selected{% endif %} value="old">Сначала старые</option>
+                            <option {% if param == 'good' %}selected{% endif %} value="good">Сначала положительные</option>
+                            <option {% if param == 'bad' %}selected{% endif %} value="bad">Сначала отрицательные</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mt-auto">
+                        <button type="submit" class="btn btn-dark">Сортировать</button>
+                    </div>
+                </div>
+            </div>
+    
+        </form>
+
+        {{ render_five_last_reviews(reviews) }}
+    
+        <div class="mb-5">
+            {{ render_pagination(pagination, request.endpoint, search_params) }}
+        </div>
+
+    </div>
+
+{% endblock %}

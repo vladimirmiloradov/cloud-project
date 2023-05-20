@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% from 'pagination.html' import render_pagination %}
+
+
+{% block content %}
+<div class="container">
+
+  <h1>Список фильмов:</h1>
+
+  <table class="table">
+    <thead>
+      <tr class="text-center">
+        <th scope="col">#</th>
+        <th scope="col">Название</th>
+        <th scope="col">Жанры</th>
+        <th scope="col">Год издания</th>
+        <th scope="col">Рейтинг</th>
+        <th scope="col">Количество оценок</th>
+        <th scope="col">Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for film in films %}
+      <tr class="filmRow text-center">
+        <th scope="row"><img src="{{ images[loop.index0] }}" class="card-img-top film-logo" alt="..."></th>
+        <td>{{ film.name }}</td>
+        <td>{{ genres[loop.index0] }}</td>
+        <td>{{ film.publication_year }}</td>
+        <td>{{ film.rating }}</td>
+        <td>{{ film.rating_num }}</td>
+        <td>
+          {% if current_user.is_authenticated %}
+          <div class="btn-group-vertical align-items-center container" role="group">
+            <a data-role="button" class="btn btn-outline-dark"
+              href="{{ url_for('films.show', film_id=film.id) }}">Просмотр</a>
+            {% if current_user.can('update', record=current_user) %}
+            <a data-role="button" class="btn btn-outline-dark"
+              href="{{ url_for('films.edit', film_id=film.id) }}">Редактировать</a>
+            {% endif %}
+            {% if current_user.can('delete', record=current_user) %}
+            <button type="button" class="btn btn-outline-dark" data-url="{{ url_for('films.delete', film_id=film.id) }}"
+              data-bs-toggle="modal" data-bs-target="#delete-film-modal">Удалить</button>
+            {% endif %}
+          </div>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="modal fade" id="delete-film-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Удаление фильма</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Вы уверены, что хотите удалить фильм <b><span id="film-name-id"></span></b>?
+          <form action="" method="POST">
+            <input id="delete-btn" type="submit" class="d-none">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+          <label class="btn btn-danger" for="delete-btn">Да</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-5">
+    {{ render_pagination(pagination, request.endpoint) }}
+  </div>
+
+  {% if current_user.is_authenticated and current_user.is_admin %}
+  <div class="text-center my-3">
+    <a class="btn btn-lg btn-dark" href="{{ url_for('films.new') }}">Добавить фильм</a>
+  </div>
+  {% endif %}
+
+
+</div>
+{% endblock %}

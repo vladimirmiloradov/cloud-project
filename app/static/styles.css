@@ -1,0 +1,33 @@
+.logo {
+    max-width: 175px;
+}
+
+.profile {
+    max-width: 45px;
+}
+
+.background-preview {
+    border: 3px dashed grey;
+    flex-grow: 1;
+}
+
+.title-area {
+    background-color: black;
+    background-image: url('images/background.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    font-size: 1.5rem;
+    min-height: calc(75vh);
+}
+
+.film-logo {
+    width: 72px;
+    min-width: 72px;
+    height: 108px;
+}
+
+.filmRow:hover {
+    background-color: beige;
+}

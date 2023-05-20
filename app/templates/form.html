@@ -1,0 +1,64 @@
+{% macro render_form(film, current_user) %}
+    <div class="container align-items-center">
+        <form method="POST" action="{{ url_for('films.apply_review', film_id=film.id) }}" enctype="multipart/form-data">
+            <input type="hidden" name="user_id" value="{{ current_user.id }}">
+            <input type="hidden" name="film_id" value="{{ film.id }}">
+            <div class="d-flex container flex-column align-items-center">
+                <select class="form-select w-25 mb-3 container" name="rating" id="rating">
+                    <option selected value="5">Отлично</option>
+                    <option value="4">Хорошо</option>
+                    <option value="3">Удовлетворительно</option>
+                    <option value="2">Неудовлетворительно</option>
+                    <option value="1">Плохо</option>
+                    <option value="0">Ужасно</option>
+                </select>
+                <textarea class="form-control container" name="text" id="text" rows="4" placeholder="Текст отзыва"></textarea>
+                <button type-="submit" class="btn btn-dark mt-3" style="width: 10%" value="Отправить">Отправить</button>
+            </div>
+        </form>
+    </div>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+    <script>
+        const easyMDE = new EasyMDE({element: document.getElementById('text')});
+    </script>
+{% endmacro %}
+
+{% macro render_user_review(user_review, current_user) %}
+    <h2 class="text-center text-uppercase font-weight-bold">Ваш отзыв</h2>
+    <div class="container d-flex w-50 justify-content-center flex-column">
+        <div class="my-3"></div>
+        <div class="d-flex">
+            <div class="flex-shrink-0">
+                <img src="{{ url_for('static', filename='images/default-profile-picture-300x300.jpeg') }}" class="rounded-circle comment-img" style="max-width: 50px;" alt="img-comment">
+            </div>
+            <div class="flex-grow-1 text-start ms-3">                
+                <h5>{{ current_user.last_name }} {{ current_user.first_name }}</h5>
+                <p class="mb-1">{{ user_review.text | safe }}</p>
+                <p class="mb-1">Оценка: {{ user_review.rating }}</p>
+                <h6>{{ user_review.created_at }}</h6>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_five_last_reviews(reviews) %}
+    <div class="container d-flex w-50 justify-content-center flex-column">
+        <div class="my-3">
+            {% for review in reviews %}
+                <div class="d-flex mt-4">
+                    <div class="flex-shrink-0">
+                        <img src="{{ url_for('static', filename='images/default-profile-picture-300x300.jpeg') }}" class="rounded-circle comment-img" style="max-width: 50px;" alt="img-comment">
+                    </div>
+                    <div class="flex-grow-1 text-start ms-3">
+                        <h5>{{ review.user.last_name }} {{ review.user.first_name }}</h5>
+                        <p class="mb-0">{{ review.text | safe }}</p>
+                        <h6>Оценка: {{ review.rating }}</h6>
+                        <h6>{{ review.created_at }}</h6>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div> 
+{% endmacro %}

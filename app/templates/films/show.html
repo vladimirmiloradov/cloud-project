@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% from 'form.html' import render_form, render_user_review, render_five_last_reviews %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row mb-5">
+        <div class="col-md-6" style="justify-content: center; display: flex;">
+            <img src="{{ image }}" alt="Постер к фильму" class="src" style="box-shadow: 5px 5px 10px black;">
+        </div>
+        <div class="col-md-6">
+            <h1 class="title mb-3 font-weight-bold">{{ film.name }}</h1>
+            <h3 class="title mb-3 font-weight-bold">{{ genres }}</h3>
+            <p class="mb-3 mx-auto">
+                <span>★</span> <span>{{ "%.2f" | format(film.rating) }}</span>
+            </p>
+            <div class="container">
+                <p class="description w-100 mb-5 mx-auto">
+                    {{ film.short_desc | safe }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    {% if current_user.is_authenticated %}
+    {% if user_review %}
+    <div class="text-center">
+        {{ render_user_review(user_review, current_user) }}
+    </div>
+    {% else %}
+    <h2 class="my-3 text-center text-uppercase font-weight-bold">Оставить отзыв</h2>
+    <div class="my-3">
+        {{ render_form(film, current_user) }}
+    </div>
+    {% endif %}
+    {% endif %}
+
+
+    <h2 class="my-3 text-center text-uppercase font-weight-bold">Недавние отзывы</h2>
+    {{ render_five_last_reviews(review) }}
+
+    <div class="d-flex justify-content-center">
+        {% if current_user.can('create_selection', record=current_user) %}
+        <button class="mb-5 me-3 text-center btn btn-dark"
+            data-url="{{ url_for('films.add_film_to_selection', film_id=film.id) }}" data-bs-toggle="modal"
+            data-bs-target="#add-selection-film-modal">Добавить в подборку</button>
+        {% endif %}
+        <a href="{{ url_for('films.reviews', film_id=film.id) }}" class="mb-5 text-center btn btn-dark">Все отзывы</a>
+    </div>
+
+    <div class="modal fade" id="add-selection-film-modal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Добавить в подборку</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ url_for('films.add_film_to_selection', film_id=film.id) }}"
+                        enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="category">Выберите свою подборку, в которую хотите добавить фильм:</label>
+                            <select class="form-select" name="selection" id="selection" multiple>
+                                {% for selection in selections %}
+                                <option value="{{ selection.id }}">{{ selection.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input id="add-btn" type="submit" class="d-none">
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <label class="btn btn-success" for="add-btn">Добавить</label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
