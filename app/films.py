@@ -48,7 +48,6 @@ def delete(film_id):
     img = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'media', 'images') + '\\' + img.storage_filename
     db.session.delete(film)
     db.session.commit()
-    os.remove(img)
     flash('Фильм был успешно удален!', 'success')
     return redirect(url_for('index'))
 

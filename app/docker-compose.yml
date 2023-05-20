@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+
+  cloud_proj:
+    container_name: cloud_proj
+    hostname: cloud_proj
+    build: # Параметры для сборки приложения
+      context: ./ # Каталог, используемый для сборки
+      dockerfile: Dockerfile # Файл, используемый для сборки образа приложения
+    ports:
+     - 10080:5000
+    restart: unless-stopped
